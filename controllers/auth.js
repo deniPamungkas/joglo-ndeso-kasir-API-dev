@@ -109,14 +109,16 @@ export const logout = (req, res) => {
 
 export const verifyEmail = async (req, res) => {
   const token = await tokenSchema.findOne({ token: req.params.token });
-  const user = await userSchema.findById({ _id: token.user_id });
   try {
+    const user = await userSchema.findById({ _id: token.user_id });
     await tokenSchema.deleteOne(token);
     await userSchema.updateOne(user, { $set: { verified: true } });
     return res
       .status(200)
-      .json("berhasil aktivasi akun! silahkan login kembali");
+      .send(
+        `berhasil aktivasi akun! silahkan login kembali. <a href="http://localhost:5173/">klik disini untuk login</a>`
+      );
   } catch (error) {
-    return res.status(500).json("failed to verify");
+    return res.status(500).json("failed to verify/ token is expired");
   }
 };

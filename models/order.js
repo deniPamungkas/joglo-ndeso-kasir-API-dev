@@ -6,20 +6,24 @@ const orderSchema = new Schema(
       type: String,
       required: true,
     },
-    nama: {
+    name: {
       type: String,
       required: true,
     },
-    kategori: {
+    category: {
       type: String,
       required: true,
     },
-    jumlah: {
+    amount: {
       type: Number,
       required: true,
     },
-    harga: {
+    price: {
       type: Number,
+      required: true,
+    },
+    photo: {
+      type: String,
       required: true,
     },
   },
