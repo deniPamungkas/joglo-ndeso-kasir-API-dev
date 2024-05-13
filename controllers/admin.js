@@ -52,7 +52,7 @@ export const getAllProducts = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await menuSchema.find({ name: req.body.name });
+    const product = await menuSchema.findOneAndDelete({ name: req.body.name });
     console.log(product);
     return res.status(200).json(product);
   } catch (error) {
