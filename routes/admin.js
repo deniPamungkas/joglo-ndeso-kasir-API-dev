@@ -11,6 +11,6 @@ const route = Router();
 route.get("/weekly", getPenjualan);
 route.post("/addNewMenu", addNewMenu);
 route.get("/getAllProducts", getAllProducts);
-route.delete("/deleteProduct", deleteProduct);
+route.post("/deleteProduct", deleteProduct);
 
 export default route;

@@ -52,8 +52,7 @@ export const getAllProducts = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await menuSchema.findOne({ name: req.body.name });
-    console.log(product);
+    const product = await menuSchema.findOneAndDelete({ name: req.body.name });
     return res.status(200).json(product);
   } catch (error) {
     console.log(error);
