@@ -58,3 +58,13 @@ export const deleteProduct = async (req, res) => {
     console.log(error);
   }
 };
+
+export const editMenu = async (req, res) => {
+  try {
+    const menu = await menuSchema.find({ name: req.body.name });
+    console.log(menu);
+    return res.status(200).json(menu);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
