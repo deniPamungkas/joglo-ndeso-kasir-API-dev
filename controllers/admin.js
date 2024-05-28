@@ -61,10 +61,25 @@ export const deleteProduct = async (req, res) => {
 
 export const editMenu = async (req, res) => {
   try {
-    const menu = await menuSchema.find({ name: req.body.name });
-    console.log(menu);
+    const menu = await menuSchema.findOne({ name: req.body.name });
     return res.status(200).json(menu);
   } catch (error) {
     return res.status(400).json(error);
+  }
+};
+
+export const updateMenu = async (req, res) => {
+  try {
+    const menu = await menuSchema.findOne({ name: req.params.id });
+    menu.name = req.body.name;
+    menu.price = req.body.price;
+    menu.category = req.body.category;
+    menu.profit = req.body.profit;
+    menu.photo = req.body.photo;
+
+    const editedMenu = await menu.save();
+    return res.status(200).json(editedMenu);
+  } catch (error) {
+    return res.status(500).json(error);
   }
 };
