@@ -5,7 +5,6 @@ const menuSchema = new Schema({
   price: { type: Number, required: true },
   profit: { type: Number, required: true },
   category: { type: String, required: true },
-  photo: { type: String, required: true },
   amount: { type: Number, required: true },
 });
 

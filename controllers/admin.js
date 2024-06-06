@@ -25,7 +25,6 @@ export const addNewMenu = async (req, res) => {
     price: req.body.price,
     category: req.body.category,
     profit: req.body.profit,
-    photo: req.body.photo,
     amount: 1,
   });
   try {
@@ -79,6 +78,15 @@ export const updateMenu = async (req, res) => {
 
     const editedMenu = await menu.save();
     return res.status(200).json(editedMenu);
+  } catch (error) {
+    return res.status(500).json(error);
+  }
+};
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await orderSchema.find();
+    return res.status(200).json(orders);
   } catch (error) {
     return res.status(500).json(error);
   }
