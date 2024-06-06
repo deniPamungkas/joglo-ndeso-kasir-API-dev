@@ -22,6 +22,10 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
+    profit: {
+      type: Number,
+      required: true,
+    },
     photo: {
       type: String,
       required: true,
