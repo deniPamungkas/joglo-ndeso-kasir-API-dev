@@ -26,10 +26,6 @@ const orderSchema = new Schema(
       type: Number,
       required: true,
     },
-    photo: {
-      type: String,
-      required: true,
-    },
   },
   {
     timestamps: true,

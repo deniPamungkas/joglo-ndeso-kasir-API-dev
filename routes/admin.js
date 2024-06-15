@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   addNewMenu,
+  deleteAll,
   deleteProduct,
   editMenu,
   getAllOrders,
@@ -18,5 +19,6 @@ route.post("/deleteProduct", deleteProduct);
 route.post("/editProduct", editMenu);
 route.patch("/updateProduct/:id", updateMenu);
 route.get("/getAllOrders", getAllOrders);
+route.get("/deleteAll", deleteAll);
 
 export default route;
