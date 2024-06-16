@@ -83,9 +83,48 @@ export const updateMenu = async (req, res) => {
   }
 };
 
+export const getThisMonthOrders = async (req, res) => {
+  const currentMonth = new Date().getMonth() + 1;
+  try {
+    const orders = await orderSchema.aggregate([
+      {
+        $match: {
+          $expr: {
+            $eq: [{ $month: "$createdAt" }, currentMonth],
+          },
+        },
+      },
+      {
+        $project: {
+          profit: 1,
+        },
+      },
+    ]);
+    return res.status(200).json(orders);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
+export const getThisWeekOrders = async (req, res) => {
+  const oneWeekAgo = new Date();
+  oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+  try {
+    const orders = await orderSchema.find({
+      createdAt: {
+        $gte: oneWeekAgo,
+      },
+    });
+    return res.status(200).json(orders);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+};
+
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await orderSchema.find();
+    const orders = await orderSchema.find({}, { profit: 1, createdAt: 1 });
     return res.status(200).json(orders);
   } catch (error) {
     return res.status(500).json(error);

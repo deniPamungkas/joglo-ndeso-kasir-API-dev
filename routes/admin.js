@@ -7,6 +7,8 @@ import {
   getAllOrders,
   getAllProducts,
   getPenjualan,
+  getThisMonthOrders,
+  getThisWeekOrders,
   updateMenu,
 } from "../controllers/admin.js";
 
@@ -18,6 +20,8 @@ route.get("/getAllProducts", getAllProducts);
 route.post("/deleteProduct", deleteProduct);
 route.post("/editProduct", editMenu);
 route.patch("/updateProduct/:id", updateMenu);
+route.get("/getThisMonthOrders", getThisMonthOrders);
+route.get("/getThisWeekOrders", getThisWeekOrders);
 route.get("/getAllOrders", getAllOrders);
 route.get("/deleteAll", deleteAll);
 
