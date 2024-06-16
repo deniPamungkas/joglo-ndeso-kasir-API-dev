@@ -7,6 +7,7 @@ import {
   getAllOrders,
   getAllProducts,
   getPenjualan,
+  getThisDayOrders,
   getThisMonthOrders,
   getThisWeekOrders,
   updateMenu,
@@ -22,6 +23,7 @@ route.post("/editProduct", editMenu);
 route.patch("/updateProduct/:id", updateMenu);
 route.get("/getThisMonthOrders", getThisMonthOrders);
 route.get("/getThisWeekOrders", getThisWeekOrders);
+route.get("/getThisDayOrders", getThisDayOrders);
 route.get("/getAllOrders", getAllOrders);
 route.get("/deleteAll", deleteAll);
 

@@ -110,15 +110,40 @@ export const getThisWeekOrders = async (req, res) => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
   try {
-    const orders = await orderSchema.find({
-      createdAt: {
-        $gte: oneWeekAgo,
+    const orders = await orderSchema.find(
+      {
+        createdAt: {
+          $gte: oneWeekAgo,
+        },
       },
-    });
+      { profit: 1 }
+    );
     return res.status(200).json(orders);
   } catch (error) {
     console.log(error);
     return res.status(400).json(error);
+  }
+};
+
+export const getThisDayOrders = async (req, res) => {
+  const start = new Date();
+  start.setHours(0, 0, 0, 0);
+
+  const end = new Date();
+  end.setHours(23, 59, 59, 999);
+  try {
+    const result = await orderSchema.find(
+      {
+        createdAt: {
+          $gte: start,
+          $lt: end,
+        },
+      },
+      { profit: 1 }
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json(error);
   }
 };
 
