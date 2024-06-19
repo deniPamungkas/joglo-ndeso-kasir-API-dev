@@ -83,6 +83,41 @@ export const updateMenu = async (req, res) => {
   }
 };
 
+export const getSixMonthOrders = async (req, res) => {
+  const sixMonth = new Date();
+  sixMonth.setMonth(sixMonth.getMonth() - 6);
+  const now = new Date();
+  try {
+    const result = await orderSchema.aggregate([
+      {
+        $match: {
+          createdAt: {
+            $gte: sixMonth,
+            $lt: now,
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            bulan: { $month: "$createdAt" },
+          },
+          keuntungan: { $sum: "$profit" },
+          jumlah: { $count: {} },
+        },
+      },
+      {
+        $sort: {
+          "_id.bulan": 1,
+        },
+      },
+    ]);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json(error);
+  }
+};
+
 export const getThisMonthOrders = async (req, res) => {
   const currentMonth = new Date().getMonth() + 1;
   try {
