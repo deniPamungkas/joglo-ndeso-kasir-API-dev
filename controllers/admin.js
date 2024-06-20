@@ -139,7 +139,7 @@ export const getSixMonthOrdersSum = async (req, res) => {
             category: "$category",
           },
           keuntungan: { $sum: "$profit" },
-          jumlah: { $count: {} },
+          jumlah: { $sum: "$amount" },
         },
       },
       {
