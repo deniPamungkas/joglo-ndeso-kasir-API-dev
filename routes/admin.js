@@ -6,6 +6,7 @@ import {
   editMenu,
   getAllOrders,
   getAllProducts,
+  getOrdersByDate,
   getPenjualan,
   getSixMonthOrders,
   getSixMonthOrdersSum,
@@ -30,5 +31,6 @@ route.get("/getThisWeekOrders", getThisWeekOrders);
 route.get("/getThisDayOrders", getThisDayOrders);
 route.get("/getAllOrders", getAllOrders);
 route.get("/deleteAll", deleteAll);
+route.post("/getOrdersByDate", getOrdersByDate);
 
 export default route;

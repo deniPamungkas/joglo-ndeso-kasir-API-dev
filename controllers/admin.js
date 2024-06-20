@@ -161,13 +161,20 @@ export const getThisMonthOrders = async (req, res) => {
       {
         $match: {
           $expr: {
-            $eq: [{ $month: "$createdAt" }, currentMonth],
+            $eq: [
+              { $dateToString: { format: "%Y-%m", date: "$createdAt" } },
+              {
+                $dateToString: { format: "%Y-%m", date: new Date() },
+              },
+            ],
           },
         },
       },
       {
         $project: {
+          amount: 1,
           profit: 1,
+          keuntungan: { $multiply: ["$amount", "$profit"] },
         },
       },
     ]);
@@ -181,14 +188,22 @@ export const getThisWeekOrders = async (req, res) => {
   const oneWeekAgo = new Date();
   oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
   try {
-    const orders = await orderSchema.find(
+    const orders = await orderSchema.aggregate([
       {
-        createdAt: {
-          $gte: oneWeekAgo,
+        $match: {
+          createdAt: {
+            $gte: oneWeekAgo,
+          },
         },
       },
-      { profit: 1 }
-    );
+      {
+        $project: {
+          profit: 1,
+          amount: 1,
+          keuntungan: { $multiply: ["$profit", "$amount"] },
+        },
+      },
+    ]);
     return res.status(200).json(orders);
   } catch (error) {
     console.log(error);
@@ -203,18 +218,49 @@ export const getThisDayOrders = async (req, res) => {
   const end = new Date();
   end.setHours(23, 59, 59, 999);
   try {
-    const result = await orderSchema.find(
+    const result = await orderSchema.aggregate([
       {
-        createdAt: {
-          $gte: start,
-          $lt: end,
+        $match: {
+          createdAt: {
+            $gte: start,
+            $lt: end,
+          },
         },
       },
-      { profit: 1 }
-    );
+      {
+        $project: {
+          amount: 1,
+          profit: 1,
+          keuntungan: { $multiply: ["$amount", "$profit"] },
+        },
+      },
+    ]);
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json(error);
+  }
+};
+
+export const getOrdersByDate = async (req, res) => {
+  const reqDate = new Date(req.body.date);
+  try {
+    const orders = await orderSchema.aggregate([
+      {
+        $match: {
+          $expr: {
+            $eq: [
+              { $dateToString: { format: "%Y-%m-%d", date: "$createdAt" } },
+              {
+                $dateToString: { format: "%Y-%m-%d", date: new Date(reqDate) },
+              },
+            ],
+          },
+        },
+      },
+    ]);
+    return res.status(200).json(orders);
+  } catch (error) {
+    return res.status(400).json(error);
   }
 };
 
