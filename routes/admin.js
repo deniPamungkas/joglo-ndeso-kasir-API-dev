@@ -8,6 +8,7 @@ import {
   getAllProducts,
   getPenjualan,
   getSixMonthOrders,
+  getSixMonthOrdersSum,
   getThisDayOrders,
   getThisMonthOrders,
   getThisWeekOrders,
@@ -23,6 +24,7 @@ route.post("/deleteProduct", deleteProduct);
 route.post("/editProduct", editMenu);
 route.patch("/updateProduct/:id", updateMenu);
 route.get("/getSixMonthOrders", getSixMonthOrders);
+route.get("/getSixMonthOrdersSum", getSixMonthOrdersSum);
 route.get("/getThisMonthOrders", getThisMonthOrders);
 route.get("/getThisWeekOrders", getThisWeekOrders);
 route.get("/getThisDayOrders", getThisDayOrders);
