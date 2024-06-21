@@ -42,7 +42,7 @@ export const addNewMenu = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const allProducts = await menuSchema.find();
+    const allProducts = await menuSchema.find().sort({ category: 1 });
     return res.status(200).json(allProducts);
   } catch (error) {
     return res.status(500).json(error);
@@ -255,6 +255,28 @@ export const getOrdersByDate = async (req, res) => {
               },
             ],
           },
+        },
+      },
+      {
+        $group: {
+          _id: { category: "$category", name: "$name", price: "$price" },
+          qty: { $sum: "$amount" },
+          totalPrice: { $sum: { $multiply: ["$price", "$amount"] } },
+        },
+      },
+      {
+        $project: {
+          name: "$_id.name",
+          qty: 1,
+          price: "$_id.price",
+          totalPrice: 1,
+          category: "$_id.category",
+        },
+      },
+      {
+        $sort: {
+          qty: -1,
+          name: 1,
         },
       },
     ]);
