@@ -3,8 +3,6 @@ import tokenSchema from "../models/token.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
-import nodemailer from "nodemailer";
-import crypto from "crypto";
 
 dotenv.config();
 
@@ -16,43 +14,8 @@ export const signUp = async (req, res) => {
     const newUser = new userSchema({
       email: req.body.email,
       password: hashedPassword,
-      verified: false,
-    });
-    const newToken = new tokenSchema({
-      user_id: newUser._id,
-      token: crypto.randomBytes(16).toString("hex"),
     });
     await newUser.save();
-    await newToken.save();
-    const config = {
-      service: "gmail",
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.MY_EMAIL,
-        pass: process.env.EMAIL_PASSWORD,
-      },
-    };
-    const transporter = nodemailer.createTransport(config);
-    transporter
-      .sendMail({
-        from: process.env.MY_EMAIL,
-        to: req.body.email,
-        subject: "test email from nodeJS",
-        text: "hello with nodemailer",
-        html: `<div>klik <a href="http://localhost:5500/auth/v1/verify/${newToken.token}" >link</a> ini untuk verifikasi akun </div>`,
-      })
-      .then(() => {
-        return res.status(203).json({
-          message: "berhasil membuat akun",
-          verification:
-            "silahkan verifikasi melalui email yang telah kami kirim ke email anda",
-        });
-      })
-      .catch((err) => {
-        return res.status(200).json({ message: err }, console.log(err));
-      });
   } catch (error) {
     return res
       .status(501)
@@ -63,37 +26,41 @@ export const signUp = async (req, res) => {
 export const login = async (req, res) => {
   const user = await userSchema.findOne({ email: req.body.email });
   try {
+    //check if user exist or not exist
     if (user) {
+      //if user exist, check password correct or incorrect
       bcrypt.compare(req.body.password, user.password, (err, result) => {
-        if (err) return res.status(400).json("masukkan password");
+        if (err)
+          return res.status(400).json({ message: "login failed", error: err });
+        //if password is incorrect
         if (!result) {
-          return res.status(404).json("wrong password");
+          return res
+            .status(404)
+            .json({ message: "login failed", error: "wrong password" });
+          //if password is correct
         } else {
-          if (user.verified) {
-            const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
-            const { $__, $isNew, ...val } = user;
-            const { password, ...dataUser } = val._doc;
-            return res
-              .status(200)
-              .cookie("accessToken", token, {
-                httpOnly: true,
-                secure: true,
-                sameSite: "none",
-              })
-              .json(dataUser);
-          } else {
-            return res.status(200).json({
-              message:
-                "akun belum diverifikasi, silahkan verifikasi terlebih dahulu melalui email yang kami kirim",
-            });
-          }
+          const token = jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+          const { $__, $isNew, ...val } = user;
+          const { password, ...dataUser } = val._doc;
+          return res
+            .status(200)
+            .cookie("accessToken", token, {
+              httpOnly: true,
+              secure: true,
+              sameSite: "none",
+            })
+            .json({ message: "login success", data: dataUser });
         }
       });
     } else {
-      return res.status(404).json("user not found!");
+      return res
+        .status(404)
+        .json({ message: "login failed", error: "user not found!" });
     }
   } catch (error) {
-    return res.status(500).json(error);
+    return res
+      .status(500)
+      .json({ message: "login failed", error: "internal server error" });
   }
 };
 
@@ -104,21 +71,5 @@ export const logout = (req, res) => {
       secure: true,
       sameSite: "none",
     })
-    .json("user has been loged out");
-};
-
-export const verifyEmail = async (req, res) => {
-  const token = await tokenSchema.findOne({ token: req.params.token });
-  try {
-    const user = await userSchema.findById({ _id: token.user_id });
-    await tokenSchema.deleteOne(token);
-    await userSchema.updateOne(user, { $set: { verified: true } });
-    return res
-      .status(200)
-      .send(
-        `berhasil aktivasi akun! silahkan login kembali. <a href="http://localhost:5173/">klik disini untuk login</a>`
-      );
-  } catch (error) {
-    return res.status(500).json("failed to verify/ token is expired");
-  }
+    .json({ message: "user has been loged out" });
 };

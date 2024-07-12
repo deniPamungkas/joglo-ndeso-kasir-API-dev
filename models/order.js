@@ -9,10 +9,12 @@ const orderSchema = new Schema(
     name: {
       type: String,
       required: true,
+      trim: true,
     },
     category: {
       type: String,
       required: true,
+      trim: true,
     },
     amount: {
       type: Number,
