@@ -1,11 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 
-const orderSchema = new Schema(
+const invoiceSchema = new Schema(
   {
-    user_id: {
-      type: String,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -16,18 +12,18 @@ const orderSchema = new Schema(
       required: true,
       trim: true,
     },
-    category: {
-      type: String,
+    price: {
+      type: Number,
       required: true,
-      trim: true,
     },
     amount: {
       type: Number,
       required: true,
     },
-    price: {
-      type: Number,
+    category: {
+      type: String,
       required: true,
+      trim: true,
     },
   },
   {
@@ -35,4 +31,4 @@ const orderSchema = new Schema(
   }
 );
 
-export default mongoose.model("order", orderSchema);
+export default mongoose.model("invoice", invoiceSchema);

@@ -21,6 +21,6 @@ route.get("/this-week", authenticateToken, getThisWeekOrders);
 route.get("/this-day", authenticateToken, getThisDayOrders);
 route.get("/", authenticateToken, getAllOrders);
 route.get("/deleteAll", deleteAll);
-route.post("/getOrdersByDate", authenticateToken, getOrdersByDate);
+route.post("/get-orders-by-date", authenticateToken, getOrdersByDate);
 
 export default route;

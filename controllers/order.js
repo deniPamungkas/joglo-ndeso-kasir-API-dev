@@ -9,8 +9,10 @@ export const addOrder = async (req, res) => {
       it.user_id = user.id;
       return it;
     });
-    await orderSchema.insertMany(req.body.data);
-    return res.status(200).json({ message: "berhasil menambahkan pesanan" });
+    const result = await orderSchema.insertMany(req.body.data);
+    return res
+      .status(200)
+      .json({ message: "berhasil menambahkan pesanan", data: result });
   } catch (error) {
     return res
       .status(500)

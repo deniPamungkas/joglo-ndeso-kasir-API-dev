@@ -18,8 +18,9 @@ export const getSixMonthOrders = async (req, res) => {
         $group: {
           _id: {
             bulan: { $month: "$createdAt" },
-            nama: "$name",
-            profit: "$profit",
+            name: "$name",
+            menuName: "$menuName",
+            price: "$price",
           },
           jumlah: { $sum: "$amount" },
         },
@@ -28,10 +29,11 @@ export const getSixMonthOrders = async (req, res) => {
         $project: {
           _id: 0,
           bulan: "$_id.bulan",
-          nama: "$_id.nama",
-          profit: "$_id.profit",
+          name: "$_id.name",
+          menuName: "$_id.menuName",
+          price: "$_id.price",
           jumlah: 1,
-          keuntungan: { $multiply: ["$_id.profit", "$jumlah"] },
+          pemasukan: { $multiply: ["$_id.price", "$jumlah"] },
         },
       },
       {
@@ -40,7 +42,7 @@ export const getSixMonthOrders = async (req, res) => {
         },
       },
     ]);
-    return res.status(200).json({ data: result });
+    return res.status(200).json(result);
   } catch (error) {
     return res.status(400).json({ error: error });
   }
@@ -111,8 +113,8 @@ export const getThisYearOrders = async (req, res) => {
       {
         $project: {
           amount: 1,
-          profit: 1,
-          keuntungan: { $multiply: ["$amount", "$profit"] },
+          price: 1,
+          pemasukan: { $multiply: ["$amount", "$price"] },
         },
       },
     ]);
@@ -140,8 +142,8 @@ export const getThisMonthOrders = async (req, res) => {
       {
         $project: {
           amount: 1,
-          profit: 1,
-          keuntungan: { $multiply: ["$amount", "$profit"] },
+          price: 1,
+          pemasukan: { $multiply: ["$amount", "$price"] },
         },
       },
     ]);
@@ -165,9 +167,9 @@ export const getThisWeekOrders = async (req, res) => {
       },
       {
         $project: {
-          profit: 1,
+          price: 1,
           amount: 1,
-          keuntungan: { $multiply: ["$profit", "$amount"] },
+          pemasukan: { $multiply: ["$price", "$amount"] },
         },
       },
     ]);
@@ -199,9 +201,9 @@ export const getThisDayOrders = async (req, res) => {
           _id: {
             time: "$createdAt",
             name: "$name",
-            profit: "$profit",
+            price: "$price",
           },
-          qty: { $sum: "$amount" },
+          amount: { $sum: "$amount" },
         },
       },
       {
@@ -209,9 +211,9 @@ export const getThisDayOrders = async (req, res) => {
           _id: 0,
           time: "$_id.time",
           name: "$_id.name",
-          profit: "$_id.profit",
-          qty: 1,
-          keuntungan: { $multiply: ["$_id.profit", "$qty"] },
+          price: "$_id.price",
+          amount: 1,
+          pemasukan: { $multiply: ["$_id.price", "$amount"] },
         },
       },
       {
@@ -220,7 +222,7 @@ export const getThisDayOrders = async (req, res) => {
         },
       },
     ]);
-    return res.status(200).json({ data: result });
+    return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ error: error });
   }
@@ -244,15 +246,20 @@ export const getOrdersByDate = async (req, res) => {
       },
       {
         $group: {
-          _id: { category: "$category", name: "$name", price: "$price" },
-          qty: { $sum: "$amount" },
+          _id: {
+            category: "$category",
+            menuName: "$menuName",
+            price: "$price",
+          },
+          amount: { $sum: "$amount" },
           totalPrice: { $sum: { $multiply: ["$price", "$amount"] } },
         },
       },
       {
         $project: {
-          name: "$_id.name",
-          qty: 1,
+          _id: 0,
+          menuName: "$_id.menuName",
+          amount: 1,
           price: "$_id.price",
           totalPrice: 1,
           category: "$_id.category",
@@ -260,8 +267,8 @@ export const getOrdersByDate = async (req, res) => {
       },
       {
         $sort: {
-          qty: -1,
-          name: 1,
+          amount: -1,
+          menuName: 1,
         },
       },
     ]);
@@ -283,12 +290,18 @@ export const getAllOrders = async (req, res) => {
 };
 
 export const deleteAll = async (req, res) => {
-  try {
-    const result = await orderSchema.deleteMany({
-      user_id: "65e96365868609e8538581e4",
-    });
-    return res.status(200).json("berhasil hapus");
-  } catch (error) {
-    return res.status(400).json("gagal");
-  }
+  // try {
+  //   const result = await orderSchema.find({ name: "Kopi" });
+  //   return res.status(200).json(result);
+  // } catch (error) {
+  //   return res.status(400).json(result);
+  // }
+  // try {
+  //   const result = await orderSchema.deleteMany({
+  //     name: "Teh",
+  //   });
+  //   return res.status(200).json("berhasil hapus");
+  // } catch (error) {
+  //   return res.status(400).json("gagal");
+  // }
 };

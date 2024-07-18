@@ -85,13 +85,11 @@ export const updateMenu = async (req, res) => {
   }
 };
 
-export const deleteAll = async (req, res) => {
-  try {
-    const result = await orderSchema.deleteMany({
-      user_id: "65e96365868609e8538581e4",
-    });
-    return res.status(200).json("berhasil hapus");
-  } catch (error) {
-    return res.status(400).json("gagal");
-  }
-};
+// export const deleteAll = async (req, res) => {
+//   try {
+//     const result = await menuSchema.deleteMany({});
+//     return res.status(200).json("berhasil hapus");
+//   } catch (error) {
+//     return res.status(400).json("gagal");
+//   }
+// };
