@@ -37,7 +37,7 @@ export const getAllProducts = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await menuSchema.findOneAndDelete({ name: req.body.name });
+    const product = await menuSchema.findOneAndDelete({ name: req.query.name });
     if (product) {
       return res
         .status(200)

@@ -58,9 +58,10 @@ export const login = async (req, res) => {
         .json({ message: "login failed", error: "user not found!" });
     }
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "login failed", error: "internal server error" });
+    return res.status(500).json({
+      message: "login failed, internal server error",
+      error,
+    });
   }
 };
 
