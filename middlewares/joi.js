@@ -33,7 +33,6 @@ export const validateOrder = async (req, res, next) => {
     amount: Joi.number().required(),
     price: Joi.number().required(),
   });
-  console.log(req.body);
   try {
     req.body.data.map((order) => {
       const { error } = validationOrderSchema.validate(order);
