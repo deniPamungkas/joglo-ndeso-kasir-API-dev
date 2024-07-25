@@ -20,7 +20,7 @@ app.listen(process.env.PORT, () => {
 app.use(
   cors({
     origin: [
-      "https://joglo-ndeso-kasir-admin.vercel.app",
+      "https://joglo-ndeso-kasir-admin-dev.vercel.app",
       "http://localhost:5173",
     ],
     credentials: true,

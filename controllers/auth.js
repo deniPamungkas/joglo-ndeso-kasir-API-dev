@@ -16,10 +16,15 @@ export const signUp = async (req, res) => {
       password: hashedPassword,
     });
     await newUser.save();
+    return res.status(200).json({
+      message: "success",
+      data: newUser,
+    });
   } catch (error) {
-    return res
-      .status(501)
-      .json({ message: `email ${error.keyValue.email} sudah terdaftar` });
+    return res.status(501).json({
+      message: `email sudah terdaftar`,
+      error,
+    });
   }
 };
 

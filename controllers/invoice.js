@@ -40,7 +40,6 @@ export const addInvoice = async (req, res) => {
 
 export const getInvoice = async (req, res) => {
   try {
-    console.log(req.query);
     const invoice = await invoiceSchema.find({ name: req.query.name });
     if (!invoice.length) {
       return res.status(200).json({ message: "Data not found", data: invoice });
