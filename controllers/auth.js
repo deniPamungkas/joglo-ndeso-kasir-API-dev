@@ -79,3 +79,23 @@ export const logout = (req, res) => {
     })
     .json({ message: "user has been loged out" });
 };
+
+export const isLoggedIn = async (req, res) => {
+  const token = req.cookies.accessToken;
+  if (!token) {
+    return res
+      .status(401)
+      .json({ message: "not logged in", error: "Unauthorized" });
+  }
+  jwt.verify(token, process.env.SECRET_KEY, async (err, result) => {
+    if (err)
+      return res
+        .status(500)
+        .json({ message: "Internal server error", error: err });
+    if (!result) {
+      return res.status(401).json({ message: "Unauthorized", error: result });
+    } else {
+      return res.status(201).json({ message: "Logged In", data: result });
+    }
+  });
+};
