@@ -80,7 +80,7 @@ export const logout = (req, res) => {
     .json({ message: "user has been loged out" });
 };
 
-export const isLoggedIn = async (req, res) => {
+export const isLoggedInAuth = async (req, res) => {
   const token = req.cookies.accessToken;
   if (!token) {
     return res
