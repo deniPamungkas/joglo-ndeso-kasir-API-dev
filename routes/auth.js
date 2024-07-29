@@ -7,6 +7,6 @@ const route = Router();
 route.post("/login", isLoggedIn, login);
 route.post("/signUp", signUp);
 route.post("/logout", authenticateToken, logout);
-route.post("/is-logged-in", isLoggedInAuth);
+route.get("/is-logged-in", isLoggedInAuth);
 
 export default route;
